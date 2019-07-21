@@ -3,6 +3,8 @@ package com.fhzalves.algamoneyapi.resource;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,7 +36,7 @@ public class CategoriaResource {
 
 	@PostMapping
 	//@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<Categoria> criar(@RequestBody Categoria categoria /*,HttpServletResponse response*/) {
+	public ResponseEntity<Categoria> criar(@Valid @RequestBody Categoria categoria /*,HttpServletResponse response*/) {
 		Categoria categoriaSalva = categoriaRepository.save(categoria);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}")
 				.buildAndExpand(categoriaSalva.getId()).toUri();
