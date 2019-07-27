@@ -12,12 +12,14 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fhzalves.algamoneyapi.event.RecursoCriadoEvent;
@@ -34,42 +36,48 @@ public class LancamentoResource {
 
 	@Autowired
 	private LancamentoRepository lancamentoRepository;
-	
+
 	@Autowired
 	private LancamentoService lancamentoService;
-	
+
 	@Autowired
 	private ApplicationEventPublisher publisher;
-	
+
 	@Autowired
 	private MessageSource messageSource;
-	
+
 	@GetMapping
-	public List<Lancamento> pesquisar(LancamentoFilter lancamentoFilter){
+	public List<Lancamento> pesquisar(LancamentoFilter lancamentoFilter) {
 		return lancamentoRepository.filtrar(lancamentoFilter);
 	}
-	
+
 	@GetMapping("/{id}")
-	public ResponseEntity<Lancamento> buscarPorId(@PathVariable Long id){
-		return this.lancamentoRepository.findById(id)
-				.map(lancamento -> ResponseEntity.ok(lancamento))
+	public ResponseEntity<Lancamento> buscarPorId(@PathVariable Long id) {
+		return this.lancamentoRepository.findById(id).map(lancamento -> ResponseEntity.ok(lancamento))
 				.orElse(ResponseEntity.notFound().build());
 	}
-	
+
 	@PostMapping
-	public ResponseEntity<Lancamento> criar(@Valid @RequestBody Lancamento lancamento, HttpServletResponse response){
+	public ResponseEntity<Lancamento> criar(@Valid @RequestBody Lancamento lancamento, HttpServletResponse response) {
 		Lancamento lancamentoSalvo = lancamentoService.salvar(lancamento);
 		publisher.publishEvent(new RecursoCriadoEvent(this, lancamento.getId(), response));
 		return ResponseEntity.status(HttpStatus.CREATED).body(lancamentoSalvo);
 	}
+
+	@DeleteMapping("/{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void delete(@PathVariable Long id) {
+		lancamentoRepository.deleteById(id);
+	}
 	
-	
-	@ExceptionHandler({PessoaInexistenteOuInativaException.class})
-	public ResponseEntity<Object> handlePessoaInexistenteOuInativaException(PessoaInexistenteOuInativaException ex){
-		String mensagemUsuario = messageSource.getMessage("pessoa.inexistente-ou-inativa", null, LocaleContextHolder.getLocale());
+	@ExceptionHandler({ PessoaInexistenteOuInativaException.class })
+	public ResponseEntity<Object> handlePessoaInexistenteOuInativaException(PessoaInexistenteOuInativaException ex) {
+		String mensagemUsuario = messageSource.getMessage("pessoa.inexistente-ou-inativa", null,
+				LocaleContextHolder.getLocale());
 		String mensagemDesenvolvedor = ex.toString();
 		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
 		return ResponseEntity.badRequest().body(erros);
-		
+
 	}
+	
 }
