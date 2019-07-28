@@ -27,16 +27,17 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		clients.inMemory().withClient("angular")// define o nome do client
 				.secret("@angul@r0")// define a senha do client
 				.scopes("read", "write")// um Array de String definindo o scope, limitar o acesso do client
-				.authorizedGrantTypes("password")// Fluxo PassWord a aplicação recebe o usuario e senha do user
-				.accessTokenValiditySeconds(1800);// Quantos segundos o token ficara ativo
+				.authorizedGrantTypes("password","refresh_token")// Fluxo PassWord a aplicação recebe o usuario e senha do user
+				.accessTokenValiditySeconds(20)// Quantos segundos o token ficara ativo
+				.refreshTokenValiditySeconds(3600*24);//Tempo que o refresh token expira 1Dia
 	}
 
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 		endpoints.tokenStore(tokenStore())
 			.accessTokenConverter(accessTokenConverter())
-			.authenticationManager(authenticationManager);// valida se esta tudo certo com
-																						// o usuario e senha
+			.reuseRefreshTokens(false)
+			.authenticationManager(authenticationManager);// valida se esta tudo certo com o usuario e senha
 	}
 
 	@Bean
