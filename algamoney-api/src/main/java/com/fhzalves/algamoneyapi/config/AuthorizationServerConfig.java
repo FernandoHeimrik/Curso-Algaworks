@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
@@ -22,12 +23,15 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	
 	@Autowired
 	private UserDetailsService userDetailsService;
+	
+	@Autowired
+	private PasswordEncoder encoder;
 
 	// Autoriza o cliente a acessar a aplicacao
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 		clients.inMemory().withClient("angular")// define o nome do client
-				.secret("$2a$10$QVcBwp5I.c6wdhkqbsypvOTWmDCtjXGsbgo.6he.iGIsGk1lUSmhy")// define a senha do client @angul@r0
+				.secret(encoder.encode("@angul@r0"))// define a senha do client @angul@r0
 				.scopes("read", "write")// um Array de String definindo o scope, limitar o acesso do client
 				.authorizedGrantTypes("password","refresh_token")// Fluxo PassWord a aplicação recebe o usuario e senha do user
 				.accessTokenValiditySeconds(1800)// Quantos segundos o token ficara ativo
