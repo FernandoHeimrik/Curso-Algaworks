@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
@@ -14,21 +14,23 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 
 @Configuration
-@EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
 	// Gerencia a autentificação. Pega o usuario e senha admin da aplicação
 	@Autowired
 	private AuthenticationManager authenticationManager;
+	
+	@Autowired
+	private UserDetailsService userDetailsService;
 
 	// Autoriza o cliente a acessar a aplicacao
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 		clients.inMemory().withClient("angular")// define o nome do client
-				.secret("@angul@r0")// define a senha do client
+				.secret("$2a$10$QVcBwp5I.c6wdhkqbsypvOTWmDCtjXGsbgo.6he.iGIsGk1lUSmhy")// define a senha do client @angul@r0
 				.scopes("read", "write")// um Array de String definindo o scope, limitar o acesso do client
 				.authorizedGrantTypes("password","refresh_token")// Fluxo PassWord a aplicação recebe o usuario e senha do user
-				.accessTokenValiditySeconds(20)// Quantos segundos o token ficara ativo
+				.accessTokenValiditySeconds(1800)// Quantos segundos o token ficara ativo
 				.refreshTokenValiditySeconds(3600*24);//Tempo que o refresh token expira 1Dia
 	}
 
@@ -37,13 +39,14 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		endpoints.tokenStore(tokenStore())
 			.accessTokenConverter(accessTokenConverter())
 			.reuseRefreshTokens(false)
+			.userDetailsService(userDetailsService)
 			.authenticationManager(authenticationManager);// valida se esta tudo certo com o usuario e senha
 	}
 
 	@Bean
 	public JwtAccessTokenConverter accessTokenConverter() {
 		JwtAccessTokenConverter accessTokenConverter = new JwtAccessTokenConverter();
-		accessTokenConverter.setSigningKey("algawors");//VERIFY SIGNATURE
+		accessTokenConverter.setSigningKey("algaworks");//VERIFY SIGNATURE
 		return accessTokenConverter;
 	}
 
