@@ -2,6 +2,7 @@ package com.fhzalves.algamoneyapi.service;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -30,5 +31,38 @@ public class LancamentoService {
 
 		return lancamentoRepository.save(lancamento);
 	}
+	
+	public Lancamento atualizar(Long id, Lancamento lancamento) {
+		Lancamento lancamentoSalvo = buscarLancamentoExistente(id);
+		if (!lancamento.getPessoa().equals(lancamentoSalvo.getPessoa())) {
+			validarPessoa(lancamento);
+		}
+
+		BeanUtils.copyProperties(lancamento, lancamentoSalvo, "id");
+
+		return lancamentoRepository.save(lancamentoSalvo);
+	}
+	
+	private void validarPessoa(Lancamento lancamento) {
+		Pessoa pessoa = null;
+		if (lancamento.getPessoa().getId() != null) {
+			pessoa = pessoaRepository.findById(lancamento.getPessoa().getId())
+					.orElseThrow(() -> new EmptyResultDataAccessException(1));
+		}
+
+		if (pessoa == null || pessoa.isInativo()) {
+			throw new PessoaInexistenteOuInativaException();
+		}
+	}
+	
+	private Lancamento buscarLancamentoExistente(Long id) {
+		Lancamento lancamentoSalvo = lancamentoRepository.findById(id)
+				.orElseThrow(() -> new EmptyResultDataAccessException(1));
+		if (lancamentoSalvo == null) {
+			throw new IllegalArgumentException();
+		}
+		return lancamentoSalvo;
+	}
+
 
 }
