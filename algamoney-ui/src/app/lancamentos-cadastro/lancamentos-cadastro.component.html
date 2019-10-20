@@ -1,5 +1,5 @@
 <div class="container">
-    <form autocomplete="off">
+    <form #form="ngForm" autocomplete="off">
         <div class="ui-g">
             <div class="ui-g-12">
                 <h1>Novo Lançamento</h1>
@@ -10,8 +10,10 @@
 
             <div class="ui-g-6 ui-md-3 ui-fluid">
                 <label>Vencimento</label>
-                <p-calendar dateFormat="dd/mm/yy" [inline]="false" [readonlyInput]="true" [showIcon]="true">
+                <p-calendar dateFormat="dd/mm/yy" [inline]="false" [readonlyInput]="false" [showIcon]="false"
+                name="dataVencimento" ngModel #dataVencimento="ngModel" required>
                 </p-calendar>
+                <app-message [control]="dataVencimento" error="required" text="Informe uma data de vencimento"></app-message>
             </div>
             <div class="ui-g-6 ui-md-3 ui-fluid">
                 <label>{{tipo.value === 'RECEITA' ? 'Recebimento' : 'Pagamento'}}</label>
@@ -29,22 +31,22 @@
                 <label>Valor</label>
                 <input pInputText currencyMask type="text"
                     [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', allowNegative: false}" placeholder="0,00"
-                    name="valor" ngModel>
+                    name="valor" ngModel required>
             </div>
             <div class="ui-g-12 ui-md-6 ui-fluid">
                 <label>Categoria</label>
-                <p-dropdown [options]="categorias" placeholder="Selecione"></p-dropdown>
+                <p-dropdown [options]="categorias" placeholder="Selecione" ngModel name="categoria" required></p-dropdown>
             </div>
             <div class="ui-g-12 ui-md-6 ui-fluid">
                 <label>Pessoa</label>
-                <p-dropdown [options]="pessoas" [filter]="true" placeholder="Selecione"></p-dropdown>
+                <p-dropdown [options]="pessoas" [filter]="true" placeholder="Selecione" ngModel name="pessoa" required></p-dropdown>
             </div>
             <div class="ui-g-12 ui-fluid">
                 <label>Observação</label>
                 <textarea pInputTextarea rows="3"></textarea>
             </div>
             <div class="ui-g-12">
-                <button pButton type="submit" label="Salvar"></button>
+                <button pButton type="submit" label="Salvar" [disabled]="form.invalid"></button>
                 <button pButton type="button" label="Novo" class="ui-button-info"></button>
                 <a href="javascript:;">Voltar para a pesquisa</a>
             </div>
