@@ -10,7 +10,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { CalendarModule } from 'primeng/calendar';
 import {SelectButtonModule} from 'primeng/selectbutton';
 import {DropdownModule} from 'primeng/dropdown';
-
+import { CurrencyMaskModule } from 'ng2-currency-mask';
 
 import { AppComponent } from './app.component';
 import { LancamentosPesquisaComponent } from './lancamentos-pesquisa/lancamentos-pesquisa.component';
@@ -36,7 +36,8 @@ import { LancamentosCadastroComponent } from './lancamentos-cadastro/lancamentos
     InputTextareaModule,
     CalendarModule,
     SelectButtonModule,
-    DropdownModule
+    DropdownModule,
+    CurrencyMaskModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -10,7 +10,8 @@
 
             <div class="ui-g-6 ui-md-3 ui-fluid">
                 <label>Vencimento</label>
-                <p-calendar dateFormat="dd/mm/yy" [inline]="false" [readonlyInput]="true" [showIcon]="true"></p-calendar>
+                <p-calendar dateFormat="dd/mm/yy" [inline]="false" [readonlyInput]="true" [showIcon]="true">
+                </p-calendar>
             </div>
             <div class="ui-g-6 ui-md-3 ui-fluid">
                 <label>{{tipo.value === 'RECEITA' ? 'Recebimento' : 'Pagamento'}}</label>
@@ -22,7 +23,7 @@
             </div>
             <div class="ui-g-12 ui-md-3 ui-fluid">
                 <label>Valor</label>
-                <input pInputText type="text" placeholder="0,00">
+                <input pInputText currencyMask type="text" [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', allowNegative: false}" placeholder="0,00">
             </div>
             <div class="ui-g-12 ui-md-6 ui-fluid">
                 <label>Categoria</label>
