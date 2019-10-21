@@ -13,7 +13,7 @@
                 <p-calendar dateFormat="dd/mm/yy" [inline]="false" [readonlyInput]="false" [showIcon]="false"
                 name="dataVencimento" ngModel #dataVencimento="ngModel" required>
                 </p-calendar>
-                <app-message [control]="dataVencimento" error="required" text="Informe uma data de vencimento"></app-message>
+                <!-- <app-message [control]="dataVencimento" error="required" text="Informe uma data de vencimento"></app-message> -->
             </div>
             <div class="ui-g-6 ui-md-3 ui-fluid">
                 <label>{{tipo.value === 'RECEITA' ? 'Recebimento' : 'Pagamento'}}</label>
@@ -22,10 +22,10 @@
             <div class="ui-g-12 ui-md-9 ui-fluid">
                 <label>Descrição</label>
                 <input pInputText type="text" name="descricao" ngModel #descricao="ngModel" required minlength="5">
-                <app-message [control]="descricao" error="required" text="Informe uma descrição"></app-message>
+                <!-- <app-message [control]="descricao" error="required" text="Informe uma descrição"></app-message>
                 <app-message [control]="descricao" error="minlength"
                     text="Mínimo de {{ descricao.errors?.minlength?.requiredLength}} caracteres. Você digito apenas {{ descricao.errors?.minlength?.actualLength}}">
-                </app-message>
+                </app-message> -->
             </div>
             <div class="ui-g-12 ui-md-3 ui-fluid">
                 <label>Valor</label>

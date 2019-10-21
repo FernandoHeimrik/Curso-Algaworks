@@ -1,10 +1,9 @@
-import { PessoasModule } from './pessoas/pessoas.module';
-import { LancamentosModule } from './lancamentos/lancamentos.module';
-import { BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { PessoasPesquisaComponent } from './pessoas-pesquisa/pessoas-pesquisa.component';
+import { PessoasCadastroComponent } from './pessoas-cadastro/pessoas-cadastro.component';
+import { PessoasGridComponent } from './pessoas-grid/pessoas-grid.component';
 import { FormsModule } from '@angular/forms';
-
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
@@ -16,24 +15,27 @@ import { DropdownModule } from 'primeng/dropdown';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
 import { InputMaskModule } from 'primeng/inputmask';
 
-import { AppComponent } from './app.component';
-import { NavbarComponent } from './navbar/navbar.component';
-import { MessageComponent } from './message/message.component';
+
 
 @NgModule({
   declarations: [
-    AppComponent,
-    NavbarComponent,
-    MessageComponent,
+    PessoasPesquisaComponent,
+    PessoasCadastroComponent,
+    PessoasGridComponent
   ],
   imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
+    CommonModule,
+    FormsModule,
 
-    LancamentosModule,
-    PessoasModule
+    InputTextModule,
+    ButtonModule,
+    TableModule,
+    TooltipModule,
+    InputMaskModule
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  exports: [
+    PessoasPesquisaComponent,
+    PessoasCadastroComponent
+  ]
 })
-export class AppModule { }
+export class PessoasModule { }
