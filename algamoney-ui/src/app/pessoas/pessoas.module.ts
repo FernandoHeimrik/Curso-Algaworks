@@ -11,7 +11,6 @@ import { InputMaskModule } from 'primeng/inputmask';
 import { SharedModule } from './../shared/shared.module';
 import { PessoasPesquisaComponent } from './pessoas-pesquisa/pessoas-pesquisa.component';
 import { PessoasCadastroComponent } from './pessoas-cadastro/pessoas-cadastro.component';
-import { PessoasGridComponent } from './pessoas-grid/pessoas-grid.component';
 
 
 
@@ -19,7 +18,6 @@ import { PessoasGridComponent } from './pessoas-grid/pessoas-grid.component';
   declarations: [
     PessoasPesquisaComponent,
     PessoasCadastroComponent,
-    PessoasGridComponent
   ],
   imports: [
     CommonModule,
