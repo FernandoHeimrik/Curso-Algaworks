@@ -16,7 +16,7 @@ export class LancamentoFiltro {
 })
 export class LancamentoService {
 
-  lancamentosUrl = 'http://localhost:8080/lancamentos';
+  lancamentosUrl = 'http://localhost:8080/landasdcamentos';
 
   constructor(private http: HttpClient) { }
 
