@@ -5,3 +5,9 @@
 <app-lancamentos-pesquisa></app-lancamentos-pesquisa>
 
 <ng2-toasty></ng2-toasty>
+<p-confirmDialog header="Confirmação" icon="pi pi-exclamation-triangle" #confirmacao>
+    <p-footer>
+        <button type="button" pButton icon="pi pi-check" label="Sim" (click)="confirmacao.accept()"></button>
+        <button type="button" pButton icon="pi pi-times" label="Não" (click)="confirmacao.reject()"></button>
+    </p-footer>
+</p-confirmDialog>
