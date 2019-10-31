@@ -19,7 +19,7 @@
 
     <div class="ui-g">
         <div class="ui-g-12">
-            <p-table [value]="pessoas" [paginator]="true" [responsive]="true" [rows]="filtro.itensPorPagina" [lazy]="true" [totalRecords]="totalRegistros" (onLazyLoad)="aoMudarPagina($event)">
+            <p-table #tabela [value]="pessoas" [paginator]="true" [responsive]="true" [rows]="filtro.itensPorPagina" [lazy]="true" [totalRecords]="totalRegistros" (onLazyLoad)="aoMudarPagina($event)">
                 <ng-template pTemplate="header">
                     <tr>
                         <th>Nome</th>
@@ -32,8 +32,8 @@
                 <ng-template pTemplate="body" let-pessoa>
                     <tr>
                         <td>{{pessoa.nome}}</td>
-                        <td>{{pessoa.cidade}}</td>
-                        <td>{{pessoa.estado}}</td>
+                        <td>{{pessoa.endereco.cidade}}</td>
+                        <td>{{pessoa.endereco.estado}}</td>
                         <td class="col-status-content">
                             <a href="javascrip:;" [pTooltip]="pessoa.ativo ? 'Desativar' : 'Ativar'" tooltipPosition="top">
                                 {{pessoa.ativo ? 'Ativo' : 'Inativo'}}
@@ -41,7 +41,7 @@
                         </td>
                         <td class="col-acoes">
                             <a class="espaco-icones" pButton icon="pi pi-pencil" pTooltip="Editar" tooltipPosition="top"></a>
-                            <button class="espaco-icones" pButton icon="pi pi-trash" pTooltip="Excluir" tooltipPosition="top"></button>
+                            <button class="espaco-icones" pButton icon="pi pi-trash" pTooltip="Excluir" tooltipPosition="top" (click)="confirmarExclusao(pessoa)"></button>
                         </td>
                     </tr>
                 </ng-template>
