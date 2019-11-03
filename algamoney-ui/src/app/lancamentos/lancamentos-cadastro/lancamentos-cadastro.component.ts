@@ -1,6 +1,7 @@
 import { FormControl } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 
 import { ToastyService } from 'ng2-toasty';
 import { ErrorHandlerService } from './../../core/error-handler.service';
@@ -9,6 +10,7 @@ import { CategoriaService } from './../../categorias/categoria.service';
 import { Lancamento } from 'src/app/core/model';
 import { LancamentoService } from '../lancamento.service';
 import { PessoaService } from './../../pessoas/pessoa.service';
+
 
 
 
@@ -35,11 +37,14 @@ export class LancamentosCadastroComponent implements OnInit {
     private toasty: ToastyService,
     private errorHandler: ErrorHandlerService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private title: Title
   ) { }
 
   ngOnInit() {
     const idLancamento = this.route.snapshot.params['id'];
+
+    this.title.setTitle('Novo lançamento');
 
     if (idLancamento) {
       this.carregarLancamento(idLancamento);
@@ -57,6 +62,7 @@ export class LancamentosCadastroComponent implements OnInit {
     this.lancamentoService.buscarPorId(id)
       .then(lancamento => {
         this.lancamento = lancamento;
+        this.atualizarTituloEdicao();
       })
       .catch(erro => this.errorHandler.handle(erro));
   }
@@ -88,6 +94,7 @@ export class LancamentosCadastroComponent implements OnInit {
         this.lancamento = lancamento;
 
         this.toasty.success('Lançamento atualizado com sucesso!');
+        this.atualizarTituloEdicao();
       })
       .catch(erro => this.errorHandler.handle(erro));
   }
@@ -111,14 +118,18 @@ export class LancamentosCadastroComponent implements OnInit {
       .catch(erro => this.errorHandler.handle(erro));
   }
 
-  novo(form: FormControl){
+  novo(form: FormControl) {
     form.reset();
-    
-    setTimeout(function() {
+
+    setTimeout(function () {
       this.lancamento = new Lancamento();
     }.bind(this), 1)
-    
+
     this.router.navigate(['/lancamentos/novo']);
+  }
+
+  atualizarTituloEdicao() {
+    this.title.setTitle(`Edição de lançamento: ${this.lancamento.descricao}`);
   }
 
 }

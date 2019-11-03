@@ -1,5 +1,6 @@
 import { ConfirmationService } from 'primeng/api';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 
 import { LazyLoadEvent } from 'primeng/components/common/api';
 import { Table } from 'primeng/table';
@@ -7,6 +8,7 @@ import { ToastyService } from 'ng2-toasty';
 
 import { LancamentoService, LancamentoFiltro } from './../lancamento.service';
 import { ErrorHandlerService } from './../../core/error-handler.service';
+
 
 
 @Component({
@@ -25,11 +27,13 @@ export class LancamentosPesquisaComponent implements OnInit {
     private lancamentoService: LancamentoService,
     private errorHandler: ErrorHandlerService,
     private toasty: ToastyService,
-    private confirmation: ConfirmationService
+    private confirmation: ConfirmationService,
+    private title: Title
   ) { }
 
   ngOnInit(): void {
     // this.pesquisar(); propriedade Lazy já carrega
+    this.title.setTitle('Pesquisa de lançamentos')
   }
   pesquisar(pagina = 0) {
     this.filtro.pagina = pagina;
