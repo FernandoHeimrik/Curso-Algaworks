@@ -35,7 +35,6 @@ export class PessoasPesquisaComponent implements OnInit {
     this.pessoaService.pesquisar(this.filtro).then(resultado => {
       this.totalRegistros = resultado.total;
       this.pessoas = resultado.pessoas;
-      console.log(this.pessoas);
     });
   }
 

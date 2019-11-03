@@ -11,11 +11,13 @@ import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
 import { PessoasModule } from './pessoas/pessoas.module';
 import { LancamentosModule } from './lancamentos/lancamentos.module';
+import { PessoasCadastroComponent } from './pessoas/pessoas-cadastro/pessoas-cadastro.component';
 
 const routes: Routes = [
   { path: 'lancamentos' , component: LancamentosPesquisaComponent},
   { path: 'lancamentos/novo' , component: LancamentosCadastroComponent},
-  { path: 'pessoas' , component: PessoasPesquisaComponent}
+  { path: 'pessoas' , component: PessoasPesquisaComponent},
+  { path: 'pessoas/nova' , component: PessoasCadastroComponent}
 ]
 
 @NgModule({
