@@ -11,9 +11,6 @@ import { Lancamento } from 'src/app/core/model';
 import { LancamentoService } from '../lancamento.service';
 import { PessoaService } from './../../pessoas/pessoa.service';
 
-
-
-
 @Component({
   selector: 'app-lancamentos-cadastro',
   templateUrl: './lancamentos-cadastro.component.html',

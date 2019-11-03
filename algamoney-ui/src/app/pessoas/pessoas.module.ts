@@ -8,10 +8,10 @@ import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 import { InputMaskModule } from 'primeng/inputmask';
 
+import { PessoasRoutingModule } from './pessoas-routing.module';
 import { SharedModule } from './../shared/shared.module';
 import { PessoasPesquisaComponent } from './pessoas-pesquisa/pessoas-pesquisa.component';
 import { PessoasCadastroComponent } from './pessoas-cadastro/pessoas-cadastro.component';
-import { RouterModule } from '@angular/router';
 
 
 
@@ -23,7 +23,6 @@ import { RouterModule } from '@angular/router';
   imports: [
     CommonModule,
     FormsModule,
-    RouterModule,
 
     InputTextModule,
     ButtonModule,
@@ -31,7 +30,8 @@ import { RouterModule } from '@angular/router';
     TooltipModule,
     InputMaskModule,
 
-    SharedModule
+    SharedModule,
+    PessoasRoutingModule
   ],
   exports: []
 })
