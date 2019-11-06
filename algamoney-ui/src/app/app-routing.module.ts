@@ -8,7 +8,7 @@ const routes: Routes = [
     { path: '', redirectTo: 'lancamentos', pathMatch: 'full' },
     { path: 'pagina-nao-encontrada', component: PaginaNaoEncontradaComponent },
     { path: '**', redirectTo: 'pagina-nao-encontrada' }
-]
+];
 
 @NgModule({
     imports: [

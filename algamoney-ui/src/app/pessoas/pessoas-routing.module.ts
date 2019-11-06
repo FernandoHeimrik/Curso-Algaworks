@@ -8,7 +8,7 @@ const routes: Routes = [
     { path: 'pessoas', component: PessoasPesquisaComponent },
     { path: 'pessoas/nova', component: PessoasCadastroComponent },
     { path: 'pessoas/:id', component: PessoasCadastroComponent },
-]
+];
 
 @NgModule({
     imports: [
