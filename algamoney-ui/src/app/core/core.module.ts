@@ -7,6 +7,7 @@ import { Title } from '@angular/platform-browser';
 import { ToastyModule } from 'ng2-toasty';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
+import { AuthService } from './../seguranca/auth.service';
 import { ErrorHandlerService } from './error-handler.service';
 import { NavbarComponent } from './navbar/navbar.component';
 import { LancamentoService } from '../lancamentos/lancamento.service';
@@ -14,6 +15,7 @@ import { PessoaService } from '../pessoas/pessoa.service';
 import { ConfirmationService } from 'primeng/api';
 import { RouterModule } from '@angular/router';
 import { PaginaNaoEncontradaComponent } from './pagina-nao-encontrada.component';
+import { CategoriaService } from '../categorias/categoria.service';
 
 
 registerLocaleData(localePt);
@@ -37,6 +39,9 @@ registerLocaleData(localePt);
   providers: [
     LancamentoService,
     PessoaService,
+    CategoriaService,
+    AuthService,
+
     ConfirmationService,
     Title,
     { provide: LOCALE_ID, useValue: 'pt-BR' },
