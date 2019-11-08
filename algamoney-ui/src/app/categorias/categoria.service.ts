@@ -11,9 +11,9 @@ export class CategoriaService {
   categoriasUrl = 'http://localhost:8080/categorias';
 
   buscarTodas(): Promise<any> {
-    const headers = new HttpHeaders().append('Authorization', 'Basic YWRtaW5AYWxnYW1vbmV5LmNvbTphZG1pbg==');
+    // const headers = new HttpHeaders().append('Authorization', 'Basic YWRtaW5AYWxnYW1vbmV5LmNvbTphZG1pbg==');
 
-    return this.http.get(`${this.categoriasUrl}`, { headers })
+    return this.http.get(`${this.categoriasUrl}`, /*{ headers }*/)
       .toPromise()
       .then(resultado => resultado );
   }

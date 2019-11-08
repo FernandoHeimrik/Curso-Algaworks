@@ -16,7 +16,6 @@ import { ConfirmationService } from 'primeng/api';
 import { RouterModule } from '@angular/router';
 import { PaginaNaoEncontradaComponent } from './pagina-nao-encontrada.component';
 import { CategoriaService } from '../categorias/categoria.service';
-import { JwtModule } from '@auth0/angular-jwt';
 
 
 registerLocaleData(localePt);
@@ -30,13 +29,7 @@ registerLocaleData(localePt);
     CommonModule,
     RouterModule,
     ToastyModule.forRoot(),
-    JwtModule.forRoot({
-      config: {
-        tokenGetter: () => {
-          return '';
-        }
-      }
-    }),
+
     ConfirmDialogModule,
   ],
   exports: [

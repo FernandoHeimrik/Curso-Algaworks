@@ -23,7 +23,6 @@ export class LancamentoService {
   constructor(private http: HttpClient) { }
 
   pesquisar(filtro: LancamentoFiltro): Promise<any> {
-    const headers = new HttpHeaders().append('Authorization', 'Basic YWRtaW5AYWxnYW1vbmV5LmNvbTphZG1pbg==');
     let params = new HttpParams();
 
     params = params.set('page', filtro.pagina.toString());
@@ -38,7 +37,7 @@ export class LancamentoService {
     if (filtro.dataVencimentoFim) {
       params = params.set('dataVencimentoAte', moment(filtro.dataVencimentoFim).format('YYYY-MM-DD'));
     }
-    return this.http.get(`${this.lancamentosUrl}?resumo`, { headers, params })
+    return this.http.get(`${this.lancamentosUrl}?resumo`, { params })
       .toPromise()
       .then(response => {
         const lancamentos = response['content'];
@@ -51,15 +50,14 @@ export class LancamentoService {
   }
 
   excluir(id: number): Promise<void> {
-    const headers = new HttpHeaders().append('Authorization', 'Basic YWRtaW5AYWxnYW1vbmV5LmNvbTphZG1pbg==');
 
-    return this.http.delete(`${this.lancamentosUrl}/${id}`, { headers })
+    return this.http.delete(`${this.lancamentosUrl}/${id}`)
       .toPromise()
       .then(() => null);
   }
 
   adicionar(lancamento: Lancamento): Promise<Lancamento> {
-    const headers = new HttpHeaders().append('Authorization', 'Basic YWRtaW5AYWxnYW1vbmV5LmNvbTphZG1pbg==')
+    const headers = new HttpHeaders()
       .append('Content-Type', 'application/json');
 
     return this.http.post<Lancamento>(
@@ -68,7 +66,7 @@ export class LancamentoService {
   }
 
   atualizar(lancamento: Lancamento): Promise<Lancamento> {
-    const headers = new HttpHeaders().append('Authorization', 'Basic YWRtaW5AYWxnYW1vbmV5LmNvbTphZG1pbg==')
+    const headers = new HttpHeaders()
       .append('Content-Type', 'application/json');
 
     return this.http.put<Lancamento>(`${this.lancamentosUrl}/${lancamento.id}`, lancamento, { headers })
@@ -81,7 +79,7 @@ export class LancamentoService {
   }
 
   buscarPorId(id: number): Promise<Lancamento> {
-    const headers = new HttpHeaders().append('Authorization', 'Basic YWRtaW5AYWxnYW1vbmV5LmNvbTphZG1pbg==')
+    const headers = new HttpHeaders()
       .append('Content-Type', 'application/json');
 
     return this.http.get(`${this.lancamentosUrl}/${id}`, { headers })
