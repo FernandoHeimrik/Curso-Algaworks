@@ -18,7 +18,7 @@
             </div>
 
             <div class="ui-g-12">
-                <button pButton type="submit" label="Login" [disabled]="!form.valid" (click)="login(usuario.value, senha.value)"></button>
+                <button pButton type="submit" label="Login" [disabled]="!form.valid" (click)="login(usuario.value, senha.value); senha.value='';"></button>
             </div>
 
         </div>

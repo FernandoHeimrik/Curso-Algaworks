@@ -16,7 +16,7 @@ export class AuthService {
     private jwtHelper: JwtHelperService
   ) {
     this.carregarToken();
-   }
+  }
 
   login(usuario: string, senha: string): Promise<void> {
     const headers = new HttpHeaders().append('Content-Type', 'application/x-www-form-urlencoded')
@@ -26,11 +26,16 @@ export class AuthService {
     return this.http.post(this.oauthTokenUrl, body, { headers })
       .toPromise()
       .then(response => {
-        console.log(response);
         this.armazenarToken(response[('access_token')]);
       })
       .catch(response => {
-        console.log(response);
+        const responseError = response.error;
+        if (response.status === 400) {
+          if (responseError.error === 'invalid_grant') {
+            return Promise.reject('Usuário ou senha inválida');
+          }
+        }
+        return Promise.reject(response);
       });
   }
 
