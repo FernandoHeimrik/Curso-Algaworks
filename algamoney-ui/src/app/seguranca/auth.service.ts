@@ -39,6 +39,11 @@ export class AuthService {
       });
   }
 
+  isAccessTokenInvalido() {
+    const token = localStorage.getItem('token');
+    return !token || this.jwtHelper.isTokenExpired(token);
+  }
+
   obterNovoAccessToken(): Promise<void> {
     const headers = new HttpHeaders().append('Content-Type', 'application/x-www-form-urlencoded')
       .append('Authorization', 'Basic YW5ndWxhcjpAYW5ndWxAcjA=');
