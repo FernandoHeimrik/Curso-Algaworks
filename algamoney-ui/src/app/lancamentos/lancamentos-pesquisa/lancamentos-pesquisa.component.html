@@ -49,7 +49,8 @@
                             {{lancamento.valor | currency:'BRL'}}</td>
                         <td class="col-acoes">
                             <a class="espaco-icones" pButton icon="pi pi-pencil" pTooltip="Editar" tooltipPosition="top" [routerLink]="['/lancamentos', lancamento.id]"></a>
-                            <button class="espaco-icones" pButton icon="pi pi-trash" pTooltip="Excluir" tooltipPosition="top" (click)="confirmarExclusao(lancamento)"></button>
+                            <button class="espaco-icones" pButton icon="pi pi-trash" pTooltip="Excluir" tooltipPosition="top" (click)="confirmarExclusao(lancamento)"
+                            [disabled]="!auth.temPermissao('ROLE_REMOVER_LANCAMENTO')"></button>
                         </td>
                     </tr>
                 </ng-template>

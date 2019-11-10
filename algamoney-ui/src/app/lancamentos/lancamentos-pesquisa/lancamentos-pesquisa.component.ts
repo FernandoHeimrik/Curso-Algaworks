@@ -1,3 +1,4 @@
+import { AuthService } from './../../seguranca/auth.service';
 import { ConfirmationService } from 'primeng/api';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
@@ -28,7 +29,8 @@ export class LancamentosPesquisaComponent implements OnInit {
     private errorHandler: ErrorHandlerService,
     private toasty: ToastyService,
     private confirmation: ConfirmationService,
-    private title: Title
+    private title: Title,
+    private auth: AuthService
   ) { }
 
   ngOnInit(): void {
