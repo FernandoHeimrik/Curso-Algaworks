@@ -16,6 +16,7 @@ import { ConfirmationService } from 'primeng/api';
 import { RouterModule } from '@angular/router';
 import { PaginaNaoEncontradaComponent } from './pagina-nao-encontrada.component';
 import { CategoriaService } from '../categorias/categoria.service';
+import { NaoAutorizadoComponent } from './nao-autorizado.component';
 
 
 registerLocaleData(localePt);
@@ -23,7 +24,8 @@ registerLocaleData(localePt);
 @NgModule({
   declarations: [
     NavbarComponent,
-    PaginaNaoEncontradaComponent
+    PaginaNaoEncontradaComponent,
+    NaoAutorizadoComponent
   ],
   imports: [
     CommonModule,
