@@ -11,25 +11,34 @@ import { ErrorHandlerService } from 'src/app/core/error-handler.service';
 })
 export class NavbarComponent implements OnInit {
 
+  exibindoMenu = false;
+
   constructor(
-    private auth: AuthService,
+    private _auth: AuthService,
     private error: ErrorHandlerService,
     private router: Router
-    ) { }
+  ) { }
 
   ngOnInit() {
   }
 
-  criarNovoAccessToken(){
+  criarNovoAccessToken() {
     return this.auth.obterNovoAccessToken();
   }
 
-  logout(){
+  logout() {
     this.auth.logout()
       .then(() => {
         this.router.navigate(['/login']);
       })
       .catch(erro => this.error.handle(erro));
+  }
+
+  public get auth(): AuthService {
+    return this._auth;
+  }
+  public set auth(value: AuthService) {
+    this._auth = value;
   }
 
 }

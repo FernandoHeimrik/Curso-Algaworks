@@ -30,7 +30,7 @@ export class LancamentosPesquisaComponent implements OnInit {
     private toasty: ToastyService,
     private confirmation: ConfirmationService,
     private title: Title,
-    private auth: AuthService
+    private _auth: AuthService
   ) { }
 
   ngOnInit(): void {
@@ -68,5 +68,12 @@ export class LancamentosPesquisaComponent implements OnInit {
         this.toasty.success('Lancamento excluído com sucesso!');
       })
       .catch(erro => this.errorHandler.handle(erro));
+  }
+
+  public get auth(): AuthService {
+    return this._auth;
+  }
+  public set auth(value: AuthService) {
+    this._auth = value;
   }
 }
