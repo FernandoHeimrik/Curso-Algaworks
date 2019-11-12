@@ -41,15 +41,15 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 				.secret(encoder.encode("@angul@r0"))// define a senha do client @angul@r0
 				.scopes("read", "write")// um Array de String definindo o scope, limitar o acesso do client
 				.authorizedGrantTypes("password","refresh_token")// Fluxo PassWord a aplicação recebe o usuario e senha do user
-				.accessTokenValiditySeconds(5)// Quantos segundos o token ficara ativo
-				.refreshTokenValiditySeconds(10)
+				.accessTokenValiditySeconds(1800)// Quantos segundos o token ficara ativo
+				.refreshTokenValiditySeconds(3600*24)
 				.and()
 				.withClient("mobile")
 				.secret(encoder.encode("m0b1le0"))
 				.scopes("read")
 				.authorizedGrantTypes("password","refresh_token")
-				.accessTokenValiditySeconds(5)
-				.refreshTokenValiditySeconds(10);
+				.accessTokenValiditySeconds(1800)
+				.refreshTokenValiditySeconds(3600*24);
 	}
 
 	@Override

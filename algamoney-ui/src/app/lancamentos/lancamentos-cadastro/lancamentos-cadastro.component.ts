@@ -82,7 +82,7 @@ export class LancamentosCadastroComponent implements OnInit {
         // this.lancamento = new Lancamento();
         this.router.navigate(['/lancamentos', lancamento.id]);
       })
-      .catch(erro => this.errorHandler.handle(erro));
+      .catch(erro => console.log(erro));
   }
 
   atualizarLancamento(form: FormControl) {
