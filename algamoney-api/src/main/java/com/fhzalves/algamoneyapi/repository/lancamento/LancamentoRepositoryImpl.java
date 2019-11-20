@@ -1,5 +1,6 @@
 package com.fhzalves.algamoneyapi.repository.lancamento;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 
+import com.fhzalves.algamoneyapi.dto.LancamentoEstatisticaCategoria;
 import com.fhzalves.algamoneyapi.model.Categoria_;
 import com.fhzalves.algamoneyapi.model.Lancamento;
 import com.fhzalves.algamoneyapi.model.Lancamento_;
@@ -104,6 +106,29 @@ public class LancamentoRepositoryImpl implements LancamentoRepositoryQuery {
 
 		criteria.select(builder.count(root));
 		return manager.createQuery(criteria).getSingleResult();
+	}
+
+	@Override
+	public List<LancamentoEstatisticaCategoria> porCategoria(LocalDate mesReferencia) {
+		CriteriaBuilder builder = manager.getCriteriaBuilder();
+		CriteriaQuery<LancamentoEstatisticaCategoria> criteria = builder
+				.createQuery(LancamentoEstatisticaCategoria.class);
+		Root<Lancamento> root = criteria.from(Lancamento.class);
+
+		criteria.select(builder.construct(LancamentoEstatisticaCategoria.class, root.get(Lancamento_.CATEGORIA),
+				builder.sum(root.get(Lancamento_.VALOR))));
+
+		LocalDate primeiroDia = mesReferencia.withDayOfMonth(1);
+		LocalDate ultimoDia = mesReferencia.withDayOfMonth(mesReferencia.lengthOfMonth());
+
+		criteria.where(builder.greaterThanOrEqualTo(root.get(Lancamento_.DATA_VENCIMENTO), primeiroDia),
+				builder.lessThanOrEqualTo(root.get(Lancamento_.DATA_VENCIMENTO), ultimoDia));
+
+		criteria.groupBy(root.get(Lancamento_.CATEGORIA));
+
+		TypedQuery<LancamentoEstatisticaCategoria> query = manager.createQuery(criteria);
+
+		return query.getResultList();
 	}
 
 }
