@@ -19,6 +19,7 @@ import org.springframework.util.StringUtils;
 
 import com.fhzalves.algamoneyapi.dto.LancamentoEstatisticaCategoria;
 import com.fhzalves.algamoneyapi.dto.LancamentoEstatisticaDia;
+import com.fhzalves.algamoneyapi.dto.LancamentoEstatisticaPessoa;
 import com.fhzalves.algamoneyapi.model.Categoria_;
 import com.fhzalves.algamoneyapi.model.Lancamento;
 import com.fhzalves.algamoneyapi.model.Lancamento_;
@@ -150,6 +151,25 @@ public class LancamentoRepositoryImpl implements LancamentoRepositoryQuery {
 		criteria.groupBy(root.get(Lancamento_.TIPO), root.get(Lancamento_.DATA_VENCIMENTO));
 
 		TypedQuery<LancamentoEstatisticaDia> query = manager.createQuery(criteria);
+
+		return query.getResultList();
+	}
+
+	@Override
+	public List<LancamentoEstatisticaPessoa> porPessoa(LocalDate inicio, LocalDate fim) {
+		CriteriaBuilder builder = manager.getCriteriaBuilder();
+		CriteriaQuery<LancamentoEstatisticaPessoa> criteria = builder.createQuery(LancamentoEstatisticaPessoa.class);
+		Root<Lancamento> root = criteria.from(Lancamento.class);
+
+		criteria.select(builder.construct(LancamentoEstatisticaPessoa.class, root.get(Lancamento_.TIPO),
+				root.get(Lancamento_.PESSOA), builder.sum(root.get(Lancamento_.VALOR))));
+
+		criteria.where(builder.greaterThanOrEqualTo(root.get(Lancamento_.DATA_VENCIMENTO), inicio),
+				builder.lessThanOrEqualTo(root.get(Lancamento_.DATA_VENCIMENTO), fim));
+
+		criteria.groupBy(root.get(Lancamento_.TIPO), root.get(Lancamento_.PESSOA));
+
+		TypedQuery<LancamentoEstatisticaPessoa> query = manager.createQuery(criteria);
 
 		return query.getResultList();
 	}
