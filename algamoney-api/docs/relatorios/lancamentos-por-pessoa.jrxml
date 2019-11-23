@@ -132,7 +132,7 @@
 				<textFieldExpression><![CDATA[$F{pessoa}.getNome()]]></textFieldExpression>
 			</textField>
 			<textField pattern="¤#,##0.00;¤-#,##0.00">
-				<reportElement x="495" y="1" width="54" height="23" uuid="7e3b97cd-713c-4878-9395-b84c69c97a9f">
+				<reportElement x="490" y="1" width="59" height="23" uuid="7e3b97cd-713c-4878-9395-b84c69c97a9f">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
