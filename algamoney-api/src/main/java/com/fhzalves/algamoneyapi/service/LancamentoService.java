@@ -17,10 +17,13 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.fhzalves.algamoneyapi.dto.LancamentoEstatisticaPessoa;
+import com.fhzalves.algamoneyapi.mail.Mailer;
 import com.fhzalves.algamoneyapi.model.Lancamento;
 import com.fhzalves.algamoneyapi.model.Pessoa;
+import com.fhzalves.algamoneyapi.model.Usuario;
 import com.fhzalves.algamoneyapi.repository.LancamentoRepository;
 import com.fhzalves.algamoneyapi.repository.PessoaRepository;
+import com.fhzalves.algamoneyapi.repository.UsuarioRepository;
 import com.fhzalves.algamoneyapi.service.exception.PessoaInexistenteOuInativaException;
 
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -31,31 +34,42 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 @Service
 public class LancamentoService {
 
+	private static final String DESTINATARIOS = "ROLE_PESQUISAR_LANCAMENTO";
+	
 	@Autowired
 	private PessoaRepository pessoaRepository;
 
 	@Autowired
 	private LancamentoRepository lancamentoRepository;
 	
-	@Scheduled(cron = "0 0 0 * * *")
-	public void avisarSobreLancamentoVencidos() {
-		System.out.println(">>>>>>>>>>>>>>>>> Método sendo executado...");
-	}
+	@Autowired
+	private UsuarioRepository usuarioRepository;
 	
+	@Autowired
+	private Mailer mailer;
+
+	//@Scheduled(fixedDelay = 1000 * 60 * 30)
+	@Scheduled(cron = "0 0 6 * * *")
+	public void avisarSobreLancamentoVencidos() {
+		List<Lancamento> vencidos = 
+				lancamentoRepository.findByDataVencimentoLessThanEqualAndDataPagamentoIsNull(LocalDate.now());
+		List<Usuario> destinatarios = usuarioRepository.findByPermissoesDescricao(DESTINATARIOS);
+		mailer.avisarSobreLancamentosVencidos(vencidos, destinatarios);
+	}
+
 	public byte[] relatorioPorPessoa(LocalDate inicio, LocalDate fim) throws Exception {
 		List<LancamentoEstatisticaPessoa> dados = lancamentoRepository.porPessoa(inicio, fim);
-		
+
 		Map<String, Object> parametros = new HashMap<>();
 		parametros.put("DT_INICIO", Date.valueOf(inicio));
 		parametros.put("DT_FIM", Date.valueOf(fim));
 		parametros.put("REPORT LOCALE", new Locale("pt", "BR"));
-		
-		InputStream inputStream = this.getClass().getResourceAsStream(
-				"/relatorios/lancamentos-por-pessoa.jasper");
-		
+
+		InputStream inputStream = this.getClass().getResourceAsStream("/relatorios/lancamentos-por-pessoa.jasper");
+
 		JasperPrint jasperPrint = JasperFillManager.fillReport(inputStream, parametros,
 				new JRBeanCollectionDataSource(dados));
-		
+
 		return JasperExportManager.exportReportToPdf(jasperPrint);
 	}
 
@@ -68,7 +82,7 @@ public class LancamentoService {
 
 		return lancamentoRepository.save(lancamento);
 	}
-	
+
 	public Lancamento atualizar(Long id, Lancamento lancamento) {
 		Lancamento lancamentoSalvo = buscarLancamentoExistente(id);
 		if (!lancamento.getPessoa().equals(lancamentoSalvo.getPessoa())) {
@@ -79,7 +93,7 @@ public class LancamentoService {
 
 		return lancamentoRepository.save(lancamentoSalvo);
 	}
-	
+
 	private void validarPessoa(Lancamento lancamento) {
 		Pessoa pessoa = null;
 		if (lancamento.getPessoa().getId() != null) {
@@ -91,7 +105,7 @@ public class LancamentoService {
 			throw new PessoaInexistenteOuInativaException();
 		}
 	}
-	
+
 	private Lancamento buscarLancamentoExistente(Long id) {
 		Lancamento lancamentoSalvo = lancamentoRepository.findById(id)
 				.orElseThrow(() -> new EmptyResultDataAccessException(1));
@@ -100,6 +114,5 @@ public class LancamentoService {
 		}
 		return lancamentoSalvo;
 	}
-
 
 }
