@@ -15,6 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fhzalves.algamoneyapi.model.enuns.TipoLancamento;
 
 @Entity
@@ -55,6 +56,11 @@ public class Lancamento {
 	@ManyToOne
 	@JoinColumn(name = "id_pessoa")
 	private Pessoa pessoa;
+	
+	@JsonIgnore
+	public boolean isReceita() {
+		return TipoLancamento.RECEITA.equals(this.tipo);
+	}
 
 	public Long getId() {
 		return id;
