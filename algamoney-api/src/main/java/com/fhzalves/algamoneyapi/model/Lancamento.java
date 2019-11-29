@@ -16,6 +16,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fhzalves.algamoneyapi.model.enuns.TipoLancamento;
 
 @Entity
@@ -52,6 +53,7 @@ public class Lancamento {
 	@JoinColumn(name = "id_categoria")
 	private Categoria categoria;
 
+	@JsonIgnoreProperties("contatos")
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "id_pessoa")
