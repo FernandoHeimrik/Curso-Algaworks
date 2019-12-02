@@ -1,8 +1,6 @@
 package com.fhzalves.algamoneyapi.resource;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -35,6 +33,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fhzalves.algamoneyapi.dto.Anexo;
 import com.fhzalves.algamoneyapi.dto.LancamentoEstatisticaCategoria;
 import com.fhzalves.algamoneyapi.dto.LancamentoEstatisticaDia;
 import com.fhzalves.algamoneyapi.event.RecursoCriadoEvent;
@@ -45,6 +44,7 @@ import com.fhzalves.algamoneyapi.repository.filter.LancamentoFilter;
 import com.fhzalves.algamoneyapi.repository.projection.ResumoLancamento;
 import com.fhzalves.algamoneyapi.service.LancamentoService;
 import com.fhzalves.algamoneyapi.service.exception.PessoaInexistenteOuInativaException;
+import com.fhzalves.algamoneyapi.storage.S3;
 
 @RestController
 @RequestMapping("/lancamentos")
@@ -61,51 +61,49 @@ public class LancamentoResource {
 
 	@Autowired
 	private MessageSource messageSource;
-	
-	
+
+	@Autowired
+	private S3 s3;
+
 	@PostMapping("/anexo")
 	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO') and #oauth2.hasScope('write')")
-	public String uploadAnexo(@RequestParam MultipartFile anexo) throws IOException {
-		OutputStream out = new FileOutputStream(
-				"C:/Users/Fernando/Pictures/anexo--" + anexo.getOriginalFilename());
-		out.write(anexo.getBytes());
-		out.close();
-		return "ok";
+	public Anexo uploadAnexo(@RequestParam MultipartFile anexo) throws IOException {
+		String nome = s3.salvarTemporariamente(anexo);
+		return new Anexo(nome, s3.configurarUrl(nome));
 	}
-	
+
 	@GetMapping("/relatorios/por-pessoa")
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
 	public ResponseEntity<byte[]> relatorioPorPessoa(
-			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate inicio, 
-			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fim) throws Exception{
+			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate inicio,
+			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fim) throws Exception {
 		byte[] relatorio = lancamentoService.relatorioPorPessoa(inicio, fim);
-		
-		return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE)
-				.body(relatorio);
+
+		return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE).body(relatorio);
 	}
-	
+
 	@GetMapping("/estatisticas/por-dia")
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
-	public List<LancamentoEstatisticaDia> porDia(){
+	public List<LancamentoEstatisticaDia> porDia() {
 		return this.lancamentoRepository.porDia(LocalDate.now());
 	}
-	
+
 	@GetMapping("/estatisticas/por-categoria")
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
-	public List<LancamentoEstatisticaCategoria> porCategoria(){
+	public List<LancamentoEstatisticaCategoria> porCategoria() {
 		return this.lancamentoRepository.porCategoria(LocalDate.now());
 	}
 
 	@GetMapping
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
 	public Page<Lancamento> pesquisar(LancamentoFilter lancamentoFilter, Pageable pageable) {
-		return lancamentoRepository.filtrar(lancamentoFilter,pageable);
+		return lancamentoRepository.filtrar(lancamentoFilter, pageable);
 	}
-	
+
 	@GetMapping(params = "resumo")
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
 	public Page<ResumoLancamento> resumir(LancamentoFilter lancamentoFilter, Pageable pageable) {
-		return lancamentoRepository.resumir(lancamentoFilter,pageable);
+		return lancamentoRepository.resumir(lancamentoFilter, pageable);
 	}
 
 	@GetMapping("/{id}")
@@ -129,7 +127,7 @@ public class LancamentoResource {
 	public void delete(@PathVariable Long id) {
 		lancamentoRepository.deleteById(id);
 	}
-	
+
 	@ExceptionHandler({ PessoaInexistenteOuInativaException.class })
 	public ResponseEntity<Object> handlePessoaInexistenteOuInativaException(PessoaInexistenteOuInativaException ex) {
 		String mensagemUsuario = messageSource.getMessage("pessoa.inexistente-ou-inativa", null,
@@ -139,7 +137,7 @@ public class LancamentoResource {
 		return ResponseEntity.badRequest().body(erros);
 
 	}
-	
+
 	@PutMapping("/{id}")
 	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO')")
 	public ResponseEntity<Lancamento> atualizar(@PathVariable Long id, @Valid @RequestBody Lancamento lancamento) {
@@ -150,5 +148,5 @@ public class LancamentoResource {
 			return ResponseEntity.notFound().build();
 		}
 	}
-	
+
 }
