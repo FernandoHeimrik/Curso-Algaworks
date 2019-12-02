@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.fhzalves.algamoneyapi.dto.LancamentoEstatisticaPessoa;
 import com.fhzalves.algamoneyapi.mail.Mailer;
@@ -27,6 +28,7 @@ import com.fhzalves.algamoneyapi.repository.LancamentoRepository;
 import com.fhzalves.algamoneyapi.repository.PessoaRepository;
 import com.fhzalves.algamoneyapi.repository.UsuarioRepository;
 import com.fhzalves.algamoneyapi.service.exception.PessoaInexistenteOuInativaException;
+import com.fhzalves.algamoneyapi.storage.S3;
 
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -51,6 +53,9 @@ public class LancamentoService {
 
 	@Autowired
 	private Mailer mailer;
+	
+	@Autowired
+	private S3 s3;
 
 	 @Scheduled(fixedDelay = 1000 * 60 * 30)
 	//@Scheduled(cron = "0 0 6 * * *")
@@ -95,10 +100,10 @@ public class LancamentoService {
 	}
 
 	public Lancamento salvar(@Valid Lancamento lancamento) {
-		Pessoa pessoa = pessoaRepository.findById(lancamento.getPessoa().getId())
-				.orElseThrow(() -> new EmptyResultDataAccessException(1));
-		if (pessoa == null || pessoa.isInativo()) {
-			throw new PessoaInexistenteOuInativaException();
+		validarPessoa(lancamento);
+		
+		if(StringUtils.hasText(lancamento.getAnexo())) {
+			s3.salvar(lancamento.getAnexo());
 		}
 
 		return lancamentoRepository.save(lancamento);
