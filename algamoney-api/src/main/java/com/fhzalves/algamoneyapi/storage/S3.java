@@ -9,10 +9,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.AccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.GroupGrantee;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.ObjectTagging;
@@ -68,12 +70,26 @@ public class S3 {
 	public void salvar(String objeto) {
 		SetObjectTaggingRequest setObjectTaggingRequest = new SetObjectTaggingRequest(property.getS3().getBucket(),
 				objeto, new ObjectTagging(Collections.emptyList()));
-		
+
 		amazonS3.setObjectTagging(setObjectTaggingRequest);
+	}
+
+	public void remover(String objeto) {
+		DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(property.getS3().getBucket(), objeto);
+
+		amazonS3.deleteObject(deleteObjectRequest);
+	}
+
+	public void substituir(String objetoAntigo, String objetoNovo) {
+		if(StringUtils.hasText(objetoAntigo)) {
+			this.remover(objetoAntigo);
+		}
+		salvar(objetoNovo);
 	}
 
 	private String gerarNomeUnico(String originalFilename) {
 		return UUID.randomUUID().toString() + "_" + originalFilename;
 	}
+
 
 }

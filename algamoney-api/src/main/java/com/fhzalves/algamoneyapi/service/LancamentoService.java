@@ -53,12 +53,12 @@ public class LancamentoService {
 
 	@Autowired
 	private Mailer mailer;
-	
+
 	@Autowired
 	private S3 s3;
 
-	 @Scheduled(fixedDelay = 1000 * 60 * 30)
-	//@Scheduled(cron = "0 0 6 * * *")
+	@Scheduled(fixedDelay = 1000 * 60 * 30)
+	// @Scheduled(cron = "0 0 6 * * *")
 	public void avisarSobreLancamentoVencidos() {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Preparando envio de e-mails de aviso de lançamentos vencidos.");
@@ -73,13 +73,13 @@ public class LancamentoService {
 		logger.info("Existem {} lançamentos vencidos.", vencidos.size());
 
 		List<Usuario> destinatarios = usuarioRepository.findByPermissoesDescricao(DESTINATARIOS);
-		if(destinatarios.isEmpty()) {
+		if (destinatarios.isEmpty()) {
 			logger.warn("Existem lançamentos vencidos, mas o sistema não encontrou destinatarios.");
 			return;
 		}
-		
+
 		mailer.avisarSobreLancamentosVencidos(vencidos, destinatarios);
-		
+
 		logger.info("Envio de e-mail de aviso concluido.");
 	}
 
@@ -101,8 +101,8 @@ public class LancamentoService {
 
 	public Lancamento salvar(@Valid Lancamento lancamento) {
 		validarPessoa(lancamento);
-		
-		if(StringUtils.hasText(lancamento.getAnexo())) {
+
+		if (StringUtils.hasText(lancamento.getAnexo())) {
 			s3.salvar(lancamento.getAnexo());
 		}
 
@@ -113,6 +113,13 @@ public class LancamentoService {
 		Lancamento lancamentoSalvo = buscarLancamentoExistente(id);
 		if (!lancamento.getPessoa().equals(lancamentoSalvo.getPessoa())) {
 			validarPessoa(lancamento);
+		}
+
+		if (StringUtils.isEmpty(lancamento.getAnexo()) && StringUtils.hasText(lancamentoSalvo.getAnexo())) {
+			s3.remover(lancamentoSalvo.getAnexo());
+		} else if (StringUtils.hasLength(lancamento.getAnexo())
+				&& !lancamento.getAnexo().equals(lancamentoSalvo.getAnexo())) {
+			s3.substituir(lancamentoSalvo.getAnexo(), lancamento.getAnexo());
 		}
 
 		BeanUtils.copyProperties(lancamento, lancamentoSalvo, "id");
