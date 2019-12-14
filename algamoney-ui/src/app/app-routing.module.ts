@@ -1,3 +1,4 @@
+import { LazyLoadEvent } from 'primeng/components/common/api';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
@@ -6,10 +7,11 @@ import { NaoAutorizadoComponent } from './core/nao-autorizado.component';
 
 
 const routes: Routes = [
-    { path: 'lancamentos', loadChildren: 'app/lancamentos/lancamentos.module#LancamentosModule'},
-    { path: 'pessoas', loadChildren: 'app/pessoas/pessoas.module#PessoasModule'},
+    { path: 'lancamentos', loadChildren: './lancamentos/lancamentos.module#LancamentosModule' },
+    { path: 'pessoas', loadChildren: './pessoas/pessoas.module#PessoasModule' },
+    { path: 'dashboard', loadChildren: './dashboard/dashboard.module#DashboardModule' },
     { path: '', redirectTo: 'login', pathMatch: 'full' },
-    { path: 'nao-autorizado', component: NaoAutorizadoComponent},
+    { path: 'nao-autorizado', component: NaoAutorizadoComponent },
     { path: 'pagina-nao-encontrada', component: PaginaNaoEncontradaComponent },
     { path: '**', redirectTo: 'pagina-nao-encontrada' }
 ];
