@@ -1,3 +1,4 @@
+
 import { NgModule, LOCALE_ID } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { registerLocaleData } from '@angular/common';
@@ -12,6 +13,7 @@ import { ErrorHandlerService } from './error-handler.service';
 import { NavbarComponent } from './navbar/navbar.component';
 import { LancamentoService } from '../lancamentos/lancamento.service';
 import { PessoaService } from '../pessoas/pessoa.service';
+import { DashboardService } from './../dashboard/dashboard.service';
 import { ConfirmationService } from 'primeng/api';
 import { RouterModule } from '@angular/router';
 import { PaginaNaoEncontradaComponent } from './pagina-nao-encontrada.component';
@@ -43,6 +45,7 @@ registerLocaleData(localePt);
     LancamentoService,
     PessoaService,
     CategoriaService,
+    DashboardService,
     AuthService,
 
     ConfirmationService,
