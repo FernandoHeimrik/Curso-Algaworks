@@ -7,12 +7,14 @@
             <label>Nome</label>
             <input pInputText type="text" name="nome" [(ngModel)]="pessoa.nome" #nome="ngModel" required minlength="5">
             <app-message [control]="nome" error="required" text="Informe o nome"></app-message>
-            <app-message [control]="nome" error="minlength" text="Mínimo de {{ nome.errors?.minlength?.requiredLength}} caracteres">
+            <app-message [control]="nome" error="minlength"
+                text="Mínimo de {{ nome.errors?.minlength?.requiredLength}} caracteres">
             </app-message>
         </div>
         <div class="ui-g-12 ui-md-9 ui-fluid">
             <label>Logradouro</label>
-            <input pInputText type="text" name="logradouro" [(ngModel)]="pessoa.endereco.logradouro" #logradouro="ngModel" required>
+            <input pInputText type="text" name="logradouro" [(ngModel)]="pessoa.endereco.logradouro"
+                #logradouro="ngModel" required>
             <app-message [control]="logradouro" error="required" text="Informe o logradouro"></app-message>
         </div>
         <div class="ui-g-12 ui-md-3 ui-fluid">
@@ -49,6 +51,10 @@
             <p-panel header="Contatos">
                 <div class="ui-g">
                     <div class="ui-g-12">
+                        <button pButton label="Novo" icon="pi pi-plus" type="button"
+                            class="ui-button-secondary" (click)="prepararNovoContato()"></button>
+                    </div>
+                    <div class="ui-g-12">
                         <p-table [value]="pessoa.contatos" [responsive]="true">
                             <ng-template pTemplate="header">
                                 <tr>
@@ -65,9 +71,11 @@
                                     <td>{{ contato.email }}</td>
                                     <td>{{ contato.telefone }}</td>
                                     <td class="col-acoes">
-                                        <button pButton icon="pi pi-pencil" type="button" pTooltip="Editar" tooltipPosition="top"></button>
+                                        <button pButton icon="pi pi-pencil" type="button" pTooltip="Editar"
+                                            tooltipPosition="top"></button>
 
-                                        <button pButton icon="pi pi-trash" type="button" pTooltip="Excluir" tooltipPosition="top"></button>
+                                        <button pButton icon="pi pi-trash" type="button" pTooltip="Excluir"
+                                            tooltipPosition="top"></button>
                                     </td>
                                 </tr>
                             </ng-template>
@@ -91,3 +99,7 @@
         </div>
     </form>
 </div>
+
+<p-dialog header="Novo Contato" [(visible)]="exibindoFormularioContato" modal="modal">
+
+</p-dialog>
