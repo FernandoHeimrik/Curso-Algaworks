@@ -1,13 +1,13 @@
 import { Title } from '@angular/platform-browser';
-import { NgForm } from '@angular/forms';
+import { NgForm, FormControl } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { ToastyService } from 'ng2-toasty';
 
 import { ErrorHandlerService } from 'src/app/core/error-handler.service';
 import { PessoaService } from './../pessoa.service';
 import { Pessoa, Contato } from 'src/app/core/model';
-import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-pessoas-cadastro',
@@ -40,9 +40,21 @@ export class PessoasCadastroComponent implements OnInit {
     this.title.setTitle('Nova Pessoa')
   }
 
-  prepararNovoContato(){
+  prepararNovoContato() {
     this.exibindoFormularioContato = true;
     this.contato = new Contato();
+  }
+
+  confirmarContato(frm: FormControl) {
+    this.pessoa.contatos.push(this.clonarContato(this.contato));
+
+    this.exibindoFormularioContato = false;
+
+    frm.reset();
+  }
+
+  clonarContato(contato: Contato): Contato {
+    return new Contato(contato.id, contato.nome, contato.email, contato.telefone);
   }
 
   get editando() {
