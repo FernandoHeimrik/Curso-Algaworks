@@ -1,4 +1,4 @@
-import { NgForm, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
@@ -25,7 +25,7 @@ export class LancamentosCadastroComponent implements OnInit {
 
   categorias = [];
   pessoas = [];
-  lancamento = new Lancamento();
+  // lancamento = new Lancamento();
   formulario: FormGroup;
 
   constructor(
@@ -79,31 +79,32 @@ export class LancamentosCadastroComponent implements OnInit {
   }
 
   get editando() {
-    return Boolean(this.lancamento.id);
+    return Boolean(this.formulario.get('id').value);
   }
 
   carregarLancamento(id: number) {
     this.lancamentoService.buscarPorId(id)
       .then(lancamento => {
-        this.lancamento = lancamento;
+        // this.lancamento = lancamento;
+        this.formulario.setValue(lancamento);
         this.atualizarTituloEdicao();
       })
       .catch(erro => this.errorHandler.handle(erro));
   }
 
 
-  salvar(form: NgForm) {
+  salvar() {
     if (this.editando) {
-      this.atualizarLancamento(form);
+      this.atualizarLancamento();
     } else {
-      this.adicionarLancamento(form);
+      this.adicionarLancamento();
     }
   }
 
-  adicionarLancamento(form: NgForm) {
-    this.lancamentoService.adicionar(this.lancamento)
+  adicionarLancamento() {
+    this.lancamentoService.adicionar(this.formulario.value)
       .then(lancamento => {
-        this.toasty.success(`Lançamento ${this.lancamento.descricao} adicionado com sucesso!`);
+        this.toasty.success(`Lançamento ${this.formulario.get('descricao').value} adicionado com sucesso!`);
 
         // form.reset();
         // this.lancamento = new Lancamento();
@@ -112,11 +113,11 @@ export class LancamentosCadastroComponent implements OnInit {
       .catch(erro => console.log(erro));
   }
 
-  atualizarLancamento(form: NgForm) {
-    this.lancamentoService.atualizar(this.lancamento)
+  atualizarLancamento() {
+    this.lancamentoService.atualizar(this.formulario.value)
       .then(lancamento => {
-        this.lancamento = lancamento;
-
+        //this.lancamento = lancamento;
+        this.formulario.setValue(lancamento);
         this.toasty.success('Lançamento atualizado com sucesso!');
         this.atualizarTituloEdicao();
       })
@@ -142,8 +143,8 @@ export class LancamentosCadastroComponent implements OnInit {
       .catch(erro => this.errorHandler.handle(erro));
   }
 
-  novo(form: NgForm) {
-    form.reset();
+  novo() {
+    this.formulario.reset();
 
     setTimeout(function () {
       this.lancamento = new Lancamento();
@@ -153,7 +154,7 @@ export class LancamentosCadastroComponent implements OnInit {
   }
 
   atualizarTituloEdicao() {
-    this.title.setTitle(`Edição de lançamento: ${this.lancamento.descricao}`);
+    this.title.setTitle(`Edição de lançamento: ${this.formulario.get('descricao').value}`);
   }
 
 }
