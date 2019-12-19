@@ -52,7 +52,8 @@
             </div>
             <div class="ui-g-6 ui-g-offset-6 ui-md-2 ui-md-offset-10 ui-fluid" *ngIf="!formulario.get('anexo').value">
                 <p-fileUpload name="anexo" mode="basic" auto="true" maxFileSize="1000000" chooseLabel="Anexar"
-                    accept="image/*,application/*" [url]="urlUploadAnexo" (onUpload)="aoTerminarUploadAnexo($event)">  </p-fileUpload>
+                    accept="image/*,application/*" [url]="urlUploadAnexo" (onUpload)="aoTerminarUploadAnexo($event)"
+                    (onError)="erroUpload($event)"></p-fileUpload>
             </div>
             <div class="ui-g-12 ui-fluid">
                 <div class="ui-g-12 ui-fluid" dir="rtl" *ngIf="formulario.get('anexo').value">
