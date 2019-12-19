@@ -1,11 +1,11 @@
 <div class="container">
-    <form  autocomplete="off" (ngSubmit)="salvar()" [formGroup]="formulario">
+    <form autocomplete="off" (ngSubmit)="salvar()" [formGroup]="formulario">
         <div class="ui-g">
             <div class="ui-g-12">
                 <h1>{{ editando ? 'Edição de' : 'Novo'}} Lançamento</h1>
             </div>
             <div class="ui-g-12">
-                <p-selectButton [options]="tipos" name="tipo"  formControlName="tipo"></p-selectButton>
+                <p-selectButton [options]="tipos" name="tipo" formControlName="tipo"></p-selectButton>
             </div>
 
             <div class="ui-g-6 ui-md-3 ui-fluid">
@@ -13,7 +13,8 @@
                 <p-calendar dateFormat="dd/mm/yy" [inline]="false" [readonlyInput]="false" [showIcon]="false"
                     name="dataVencimento" formControlName="dataVencimento">
                 </p-calendar>
-                <app-message [control]="formulario.get('dataVencimento')" error="required" text="Informe uma data de vencimento">
+                <app-message [control]="formulario.get('dataVencimento')" error="required"
+                    text="Informe uma data de vencimento">
                 </app-message>
             </div>
             <div class="ui-g-6 ui-md-3 ui-fluid">
@@ -24,7 +25,8 @@
             <div class="ui-g-12 ui-md-9 ui-fluid">
                 <label>Descrição</label>
                 <input pInputText type="text" name="descricao" formControlName="descricao">
-                <app-message [control]="formulario.get('descricao')" error="obrigatoriedade" text="Informe uma descrição"></app-message>
+                <app-message [control]="formulario.get('descricao')" error="obrigatoriedade"
+                    text="Informe uma descrição"></app-message>
                 <app-message [control]="formulario.get('descricao')" error="tamanhoMinimo"
                     text="Mínimo de {{ formulario.get('descricao').errors?.tamanhoMinimo?.tamanho }} caracteres.">
                 </app-message>
@@ -41,16 +43,22 @@
             </div>
             <div class="ui-g-12 ui-md-6 ui-fluid" formGroupName="pessoa">
                 <label>Pessoa</label>
-                <p-dropdown [options]="pessoas" [filter]="true" placeholder="Selecione"
-                formControlName="id"></p-dropdown>
+                <p-dropdown [options]="pessoas" [filter]="true" placeholder="Selecione" formControlName="id">
+                </p-dropdown>
             </div>
             <div class="ui-g-12 ui-fluid">
                 <label>Observação</label>
                 <textarea pInputTextarea rows="3" formControlName="observacao" name="observacao"></textarea>
             </div>
-            <div class="ui-g-6 ui-g-offset-6 ui-md-2 ui-md-offset-10 ui-fluid">
+            <div class="ui-g-6 ui-g-offset-6 ui-md-2 ui-md-offset-10 ui-fluid" *ngIf="!formulario.get('anexo').value">
                 <p-fileUpload name="anexo" mode="basic" auto="true" maxFileSize="1000000" chooseLabel="Anexar"
-                    accept="image/*,application/*" [url]="urlUploadAnexo"></p-fileUpload>
+                    accept="image/*,application/*" [url]="urlUploadAnexo" (onUpload)="aoTerminarUploadAnexo($event)">  </p-fileUpload>
+            </div>
+            <div class="ui-g-12 ui-fluid">
+                <div class="ui-g-12 ui-fluid" dir="rtl" *ngIf="formulario.get('anexo').value">
+                    <a target="_blank" pTooltip="Baixar anexo" tooltipPosition="top"
+                        [href]="formulario.get('urlAnexo').value">{{ nomeAnexo }}</a>
+                </div>
             </div>
             <div class="ui-g-12">
                 <button pButton type="submit" label="Salvar" [disabled]="formulario.invalid"></button>

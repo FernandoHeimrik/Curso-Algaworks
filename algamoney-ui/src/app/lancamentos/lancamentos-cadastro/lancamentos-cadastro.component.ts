@@ -54,6 +54,25 @@ export class LancamentosCadastroComponent implements OnInit {
     this.carregarPessoas();
   }
 
+  aoTerminarUploadAnexo(event) {
+    const anexo = event.originalEvent.body;
+
+    this.formulario.patchValue({
+      anexo: anexo.nome,
+      urlAnexo: anexo.url
+    });
+  }
+
+  get nomeAnexo() {
+    const nome = this.formulario.get('anexo').value;
+
+    if (nome) {
+      return nome.substring(nome.indexOf('_') + 1, nome.length);
+    }
+
+    return '';
+  }
+
   get urlUploadAnexo() {
     return this.lancamentoService.urlUploadAnexo();
   }
@@ -74,7 +93,9 @@ export class LancamentosCadastroComponent implements OnInit {
         id: [null, Validators.required],
         nome: []
       }),
-      observacao: []
+      observacao: [],
+      anexo: [],
+      urlAnexo: []
     });
   }
 
