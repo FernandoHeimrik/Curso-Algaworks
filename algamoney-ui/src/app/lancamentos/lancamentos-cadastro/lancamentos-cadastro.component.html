@@ -66,7 +66,7 @@
                 </div>
             </div>
             <div class="ui-g-12">
-                <button pButton type="submit" label="Salvar" [disabled]="formulario.invalid"></button>
+                <button pButton type="submit" label="Salvar" [disabled]="formulario.invalid || uploadEmAndamento"></button>
                 <button pButton type="button" label="Novo" class="ui-button-info" (click)="novo()"></button>
                 <a routerLink="/lancamentos">Voltar para a pesquisa</a>
             </div>
