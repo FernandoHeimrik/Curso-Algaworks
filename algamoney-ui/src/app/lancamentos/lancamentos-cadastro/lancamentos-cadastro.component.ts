@@ -56,7 +56,6 @@ export class LancamentosCadastroComponent implements OnInit {
   }
 
   uploadAnexoEmAndamento(event) {
-    console.log(event)
     this.uploadEmAndamento = true;
   }
 
@@ -75,6 +74,13 @@ export class LancamentosCadastroComponent implements OnInit {
     this.toasty.error('Erro ao tentar enviar anexo!');
 
     this.uploadEmAndamento = false;
+  }
+
+  removerAnexo() {
+    this.formulario.patchValue({
+      anexo: null,
+      urlAnexo: null
+    });
   }
 
   get nomeAnexo() {
