@@ -64,6 +64,13 @@ export class PessoasCadastroComponent implements OnInit {
     this.pessoaService.buscarPorId(id)
       .then(pessoa => {
         this.pessoa = pessoa;
+
+        this.estadoSelecionado = (this.pessoa.endereco.cidade) ?
+          this.pessoa.endereco.cidade.estado.id : null;
+
+        if (this.estadoSelecionado) {
+          this.carregarCidades();
+        }
         this.atualizarTituloEdicao();
       })
       .catch(erro => this.errorHandler.handle(erro));
