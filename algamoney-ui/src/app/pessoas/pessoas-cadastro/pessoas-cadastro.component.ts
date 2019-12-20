@@ -17,6 +17,7 @@ import { Pessoa, Contato } from 'src/app/core/model';
 export class PessoasCadastroComponent implements OnInit {
 
   pessoa = new Pessoa();
+  estados: any[];
 
   constructor(
     private pessoaService: PessoaService,
@@ -31,6 +32,7 @@ export class PessoasCadastroComponent implements OnInit {
   ngOnInit() {
     const idPessoa = this.route.snapshot.params['id'];
 
+    this.carregarEstados();
     if (idPessoa) {
       this.carregarPessoa(idPessoa)
     }
@@ -40,6 +42,13 @@ export class PessoasCadastroComponent implements OnInit {
 
   get editando() {
     return Boolean(this.pessoa.id)
+  }
+
+  carregarEstados() {
+    this.pessoaService.listarEstados().then(lista => {
+      this.estados = lista.map(uf => ({ label: uf.nome, value: uf.id }));
+    })
+      .catch(erro => this.errorHandler.handle(erro));
   }
 
   carregarPessoa(id: number) {
