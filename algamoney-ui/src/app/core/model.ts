@@ -4,8 +4,7 @@ export class Endereco {
     complemento: string;
     bairro: string;
     cep: string;
-    cidade: string;
-    estado: string;
+    cidade = new Cidade();
 }
 
 export class Contato {
@@ -23,6 +22,17 @@ export class Contato {
         this.email = email;
         this.telefone = telefone;
     }
+}
+
+export class Estado {
+    id: number;
+    nome: string;
+}
+
+export class Cidade {
+    id: number;
+    nome: string;
+    estado = new Estado();
 }
 
 export class Pessoa {
