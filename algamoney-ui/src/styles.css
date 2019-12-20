@@ -38,6 +38,6 @@ label {
     text-align: center;
 }
 
-.espaco-icones {
-    margin: 0 .25em!important;
-}
+a, button {
+    margin: 0 .25em!important
+  }
